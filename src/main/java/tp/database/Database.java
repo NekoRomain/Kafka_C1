@@ -7,10 +7,10 @@ import java.time.LocalDateTime;
 public class Database {
 
     //private final String url = "jdbc:postgresql://localhost/tpKafka";
-    private final String url = "jdbc:postgresql://kandula.db.elephantsql.com:5432/farkmhhu";
+    private final String url = "jdbc:postgresql://kandula.db.elephantsql.com:5432/pornlkar";
     //private final String user = "postgres";
-    private final String user = "farkmhhu";
-    private final String password = "1SYc1FfQl6KC0OFg3nyeUbvoQf5YMSWW";
+    private final String user = "pornlkar";
+    private final String password = "mbdpf5meee5IsCGJXyf80q3Gj9-L0lOz";
 
     //private final String password = "root";
 
