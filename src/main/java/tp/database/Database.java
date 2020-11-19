@@ -6,6 +6,14 @@ import java.time.LocalDateTime;
 
 public class Database {
 
+    private static final Database instance = new Database();
+
+    private Connection connection = null;
+
+    private Database (){
+        connection = connect();
+    }
+
     //private final String url = "jdbc:postgresql://localhost/tpKafka";
     private final String url = "jdbc:postgresql://kandula.db.elephantsql.com:5432/pornlkar";
     //private final String user = "postgres";
@@ -66,13 +74,14 @@ public class Database {
             "new_recovered = EXCLUDED.new_recovered," +
             "total_recovered = EXCLUDED.total_recovered," +
             "date_maj = EXCLUDED.date_maj;";
-    public Connection connect() {
+
+    private Connection connect() {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url, user, password);
 
             if (conn != null) {
-                System.out.println("Success");
+                System.out.println("Connection success");
             } else {
                 System.out.println("Failed to make connection!");
             }
@@ -86,10 +95,7 @@ public class Database {
 
     public void createTable() throws SQLException {
 
-        // Step 1: Establishing a Connection
-        try (Connection connection = connect();
-
-             // Step 2:Create a statement using connection object
+        try (// Step 2:Create a statement using connection object
              Statement statement = connection.createStatement();) {
 
             // Step 3: Execute the query or update query
@@ -106,10 +112,7 @@ public class Database {
                                          long new_recovered, long total_recovered,
                                          LocalDateTime date) throws SQLException {
 
-        // Step 1: Establishing a Connection
-        try (Connection connection = connect();
-
-             // Step 2:Create a statement using connection object
+        try (// Step 2:Create a statement using connection object
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_UPDATE_SQL)) {
             preparedStatement.setInt(1, 1);
             preparedStatement.setLong(2, new_confirmed);
@@ -131,14 +134,12 @@ public class Database {
 
     public void inserOrUpdatetIntoCountry(String country, String countryCode, String slug,
                                           long new_confirmed, long total_confirmed,
-                                         long new_deaths, long total_deaths,
-                                         long new_recovered, long total_recovered,
-                                         LocalDateTime date) throws SQLException {
+                                          long new_deaths, long total_deaths,
+                                          long new_recovered, long total_recovered,
+                                          LocalDateTime date) throws SQLException {
 
         // Step 1: Establishing a Connection
-        try (Connection connection = connect();
-
-             // Step 2:Create a statement using connection object
+        try (// Step 2:Create a statement using connection object
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_UPDATE_SQL_COUNTRY)) {
 
             preparedStatement.setString(1, country);
@@ -162,7 +163,7 @@ public class Database {
     }
 
     public static void printSQLException(SQLException ex) {
-        for (Throwable e: ex) {
+        for (Throwable e : ex) {
             if (e instanceof SQLException) {
                 e.printStackTrace(System.err);
                 System.err.println("SQLState: " + ((SQLException) e).getSQLState());
@@ -175,6 +176,23 @@ public class Database {
                 }
             }
         }
+    }
+
+    public static final Database getInstance()
+    {
+        return instance;
+    }
+
+    public Connection getConnection() {
+        if(connection == null){
+            connection = connect();
+        }
+        return connection;
+    }
+
+    public void closeConnection() throws SQLException {
+        if(connection != null)
+            connection.close();
     }
 }
 
