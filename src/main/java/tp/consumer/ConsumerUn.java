@@ -94,6 +94,7 @@ public class ConsumerUn implements Runnable {
                 }
             });
         }
+        consumer.close();
         try {
             database.closeConnection();
         } catch (SQLException throwables) {
