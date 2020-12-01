@@ -14,10 +14,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.Collections;
 import java.util.Date;
 
@@ -41,7 +38,7 @@ public class ConsumerUn implements Runnable {
     @Override
     public void run() {
         while (!Thread.interrupted()) {
-            ConsumerRecords<String, String> records = consumer.poll(100);
+            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
             records.forEach(stringStringConsumerRecord -> {
                 String s = stringStringConsumerRecord.value();
                 try {
